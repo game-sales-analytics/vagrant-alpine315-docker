@@ -9,7 +9,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
 jobs:
   main:
-    timeout-minutes: 60
+    timeout-minutes: 90
     runs-on: macos-10.15
     concurrency:
       cancel-in-progress: false
@@ -78,7 +78,14 @@ jobs:
       - name: Validate Packer Template
         run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
       - name: Build Vagrant Box
-        run: packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
+        run: |
+          # Retry 5 times before the steps actually fails
+          (echo "===== Packer build: 1 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 2 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 3 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 4 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 5 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "==== Packer build Failed ====" && exit 1)
       - name: Generate Release Note
         run: |
           echo '# Release `${{ steps.meta.outputs.tag_name }}`' > release.md

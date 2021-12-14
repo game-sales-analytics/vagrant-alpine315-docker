@@ -85,6 +85,13 @@ build {
     expect_disconnect   = true
   }
 
+  post-processor "shell-local" {
+    inline = [
+      "ls -halu",
+      "ls -halu build",
+    ]
+  }
+
   post-processor "artifice" {
     files = [
       "build/xeptore-alpine315-docker-disk001.vmdk",
@@ -92,10 +99,24 @@ build {
     ]
   }
 
+  post-processor "shell-local" {
+    inline = [
+      "ls -halu",
+      "ls -halu build",
+    ]
+  }
+
   post-processor "vagrant" {
     keep_input_artifact = false
     compression_level = 9
     provider_override = "virtualbox"
+  }
+
+  post-processor "shell-local" {
+    inline = [
+      "ls -halu",
+      "ls -halu build",
+    ]
   }
 
   post-processor "vagrant-cloud" {

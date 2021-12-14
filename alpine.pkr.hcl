@@ -85,23 +85,24 @@ build {
     expect_disconnect   = true
   }
 
-  post-processor "vagrant" {
-    keep_input_artifact = false
-    compression_level = 9
-    provider_override = "virtualbox"
-    output = "alpine315-docker.box"
-    vagrantfile_template = "vagrantfile.tpl"
-  }
+  post-processors {
+    post-processor "vagrant" {
+      keep_input_artifact = true
+      compression_level   = 9
+      provider_override   = "virtualbox"
+      output              = "alpine315-docker.box"
+    }
 
-  post-processor "vagrant-cloud" {
-    access_token        = "${var.cloud_token}"
-    box_tag             = "xeptore/alpine315-docker"
-    version             = "${var.version}"
-    version_description = "${var.version_description}"
-  }
+    post-processor "vagrant-cloud" {
+      access_token        = "${var.cloud_token}"
+      box_tag             = "xeptore/alpine315-docker"
+      version             = "${var.version}"
+      version_description = "${var.version_description}"
+    }
 
-  post-processor "checksum" {
-    checksum_types = ["sha512"]
-    output         = "packer_{{.BuildName}}.checksum"
+    post-processor "checksum" {
+      checksum_types = ["sha512"]
+      output         = "build.checksum"
+    }
   }
 }

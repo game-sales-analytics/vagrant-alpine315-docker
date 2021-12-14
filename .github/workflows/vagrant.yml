@@ -82,17 +82,23 @@ jobs:
       - name: Generate Release Note
         run: |
           echo '# Release `${{ steps.meta.outputs.tag_name }}`' > release.md
-          echo '' > release.md
-          echo '`build.checksum` contains sha512 checksums of the built Vagrant box. You can use it in your `Vagrantfile`.' >> release.md
-          echo '`alpine315-docker.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:' >> release.md
-          echo '```sh' >> release.md
-          echo 'vagrant box add --name xeptore/alpine315-docker /path/to/package.box' >> release.md
-          echo '```' >> release.md
+          echo '' >> release.md
+          echo '## Artifacts' >> release.md
+          echo '' >> release.md
+          echo '- `build.checksum` contains sha512 checksums of the built Vagrant box. You can use it in your `Vagrantfile`.' >> release.md
+          echo '' >> release.md
+          echo '- `alpine315-docker.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:' >> release.md
+          echo '' >> release.md
+          echo '  ```sh' >> release.md
+          echo '  vagrant box add --name xeptore/alpine315-docker /path/to/package.box' >> release.md
+          echo '  ```' >> release.md
+          echo '' >> release.md
           echo 'The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.' >> release.md
           echo '' >> release.md
+          echo '## Box `SHA512`' >> release.md
           echo '' >> release.md
           echo '```sh' >> release.md
-          cat build.checksum >> release.md
+          cut -f 1 build.checksum >> release.md
           echo '```' >> release.md
 
           cat release.md

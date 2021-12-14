@@ -79,28 +79,32 @@ jobs:
         run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
       - name: Build Vagrant Box
         run: packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
-      - name: sample
+      - name: Generate Release Note
         run: |
-          ls -lhalu .
-          ls -lhalu build
+          echo '# Release `${{ steps.meta.outputs.tag_name }}`' > release.md
+          echo '' > release.md
+          echo '`build.checksum` contains sha512 checksums of the built Vagrant box. You can use it in your `Vagrantfile`.' >> release.md
+          echo '`alpine315-docker.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:' >> release.md
+          echo '```sh' >> release.md
+          echo 'vagrant box add --name xeptore/alpine315-docker /path/to/package.box' >> release.md
+          echo '```' >> release.md
+          echo 'The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.' >> release.md
+          echo '' >> release.md
+          echo '' >> release.md
+          echo '```sh' >> release.md
+          cat build.checksum >> release.md
+          echo '```' >> release.md
+
+          cat release.md
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             license.txt
             build.checksum
+            alpine315-docker.box
           prerelease: false
           draft: false
-          body: |
-            # Release `${{ steps.meta.outputs.tag_name }}`
-
-            `build.checksum` contains different checksums of the built Vagrant box. You can use it in your `Vagrantfile`.
-
-            `package.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:
-            ```sh
-            vagrant box add --name xeptore/alpine315-docker /path/to/package.box
-            ```
-            The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.
-
+          body_path: release.md
           name: ${{ steps.meta.outputs.tag_name }}
           tag_name: ${{ steps.meta.outputs.tag_name }}

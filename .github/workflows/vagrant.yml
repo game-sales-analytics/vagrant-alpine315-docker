@@ -1,0 +1,106 @@
+name: Build And Publish Vagrant Box
+on:
+  schedule:
+    - cron: "37 */4 * * *"
+  push:
+    branches:
+      - main
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+jobs:
+  main:
+    timeout-minutes: 60
+    runs-on: macos-10.15
+    concurrency:
+      cancel-in-progress: false
+      group: ${{ format('{0}-{1}', github.event_name, github.ref_name) }}
+    steps:
+      - name: Install Tools
+        run: brew install coreutils
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Meta
+        id: meta
+        run: |
+          if [[ '${{ github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' }}' == 'true' ]];
+          then
+            VERSION=$(echo ${{ github.ref_name }} | sed s/^v//)
+            echo ::set-output name=version::$VERSION
+            echo ::set-output name=create_tag::0
+            echo ::set-output name=tag_name::${{ github.ref_name }}
+            echo ::set-output name=box_description::'Manual build.'
+          else
+            BUILD_DATE_TIME=$(gdate --iso-8601=seconds)
+            echo ::set-output name=build_date_time::$BUILD_DATE_TIME
+            VERSION=$(gdate --date="$BUILD_DATE_TIME" '+%Y%m%d.%-H.%-M')
+            TAG_NAME=$(printf 'v%s' $VERSION)
+            echo ::set-output name=version::$VERSION
+            echo ::set-output name=create_tag::1
+            echo ::set-output name=tag_name::$TAG_NAME
+            BUILD_AT=$(gdate --date="$BUILD_DATE_TIME" --rfc-3339=seconds)
+            echo ::set-output name=box_description::"Automated build at $BUILD_AT."
+          fi
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v4
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PRIVATE_KEY_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+      - name: Create Tag
+        if: steps.meta.outputs.create_tag == 1
+        run: |
+          git tag -sa ${{ steps.meta.outputs.tag_name }} -m ${{ steps.meta.outputs.tag_name }}
+          git push --follow-tags
+      - name: Install VirtualBox
+        run: |
+          curl https://download.virtualbox.org/virtualbox/6.1.30/VirtualBox-6.1.30-148432-OSX.dmg --output vb.dmg
+          sudo hdiutil attach vb.dmg
+          sudo installer -package /Volumes/VirtualBox/VirtualBox.pkg -target /
+          sudo hdiutil detach /Volumes/VirtualBox
+          VBoxManage --version
+      - name: Install Vagrant
+        run: |
+          brew install vagrant
+      - name: Install Packer
+        run: |
+          brew tap hashicorp/tap
+          brew install hashicorp/tap/packer
+      - name: Run vagrant up
+        run: vagrant up --provider=virtualbox
+      - name: SSH Into Box After Boot
+        run: vagrant ssh -c "echo 'hello world!'"
+      - name: Remove Already Existing Version
+        run: |
+          curl --header 'Authorization: Bearer ${{ secrets.VAGRANT_CLOUD_TOKEN }}' --request DELETE https://app.vagrantup.com/api/v1/box/xeptore/alpine315-docker/version/${{ steps.meta.outputs.version }}
+      - name: Validate Packer Template
+        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' ubuntu.pkr.hcl
+      - name: Build Vagrant Box
+        run: packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' ubuntu.pkr.hcl
+      - name: Prepare Built Box Checksum
+        run: |
+          mv packer_xeptore-alpine315-docker.checksum build.checksum
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            license.txt
+            build.checksum
+            build/package.box
+          prerelease: false
+          draft: false
+          body: |
+            # Release `${{ steps.meta.outputs.tag_name }}`
+
+            `build.checksum` contains different checksums of the built Vagrant box. You can use it in your `Vagrantfile`.
+
+            `package.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:
+            ```sh
+            vagrant box add --name xeptore/alpine315-docker </path/to/package.box>
+            ```
+            The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.
+
+          name: ${{ steps.meta.outputs.tag_name }}
+          tag_name: ${{ steps.meta.outputs.tag_name }}

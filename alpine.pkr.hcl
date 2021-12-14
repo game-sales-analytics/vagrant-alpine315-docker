@@ -100,6 +100,13 @@ build {
       version_description = "${var.version_description}"
     }
 
+    post-processor "artifice" {
+      keep_input_artifact = true
+      files = [
+        "./alpine315-docker.box",
+      ]
+    }
+
     post-processor "checksum" {
       checksum_types = ["sha512"]
       output         = "build.checksum"

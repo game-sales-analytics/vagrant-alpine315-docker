@@ -85,24 +85,12 @@ build {
     expect_disconnect   = true
   }
 
-  post-processor "artifice" {
-    files = [
-      "build/xeptore-alpine315-docker-disk001.vmdk",
-      "build/xeptore-alpine315-docker.ovf",
-    ]
-  }
-
   post-processor "vagrant" {
     keep_input_artifact = false
     compression_level = 9
     provider_override = "virtualbox"
+    output = "alpine315-docker.box"
     vagrantfile_template = "vagrantfile.tpl"
-  }
-
-  post-processor "artifice" {
-    files = [
-      "./build/alpine315-docker.box",
-    ]
   }
 
   post-processor "vagrant-cloud" {

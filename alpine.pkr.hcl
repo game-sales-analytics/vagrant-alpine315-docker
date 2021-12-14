@@ -110,6 +110,13 @@ build {
     keep_input_artifact = false
     compression_level = 9
     provider_override = "virtualbox"
+    output = "./build/alpine315-docker.box"
+  }
+
+  post-processor "artifice" {
+    files = [
+      "./build/alpine315-docker.box",
+    ]
   }
 
   post-processor "shell-local" {

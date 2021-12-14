@@ -101,7 +101,7 @@ build {
     }
 
     post-processor "artifice" {
-      keep_input_artifact = true
+      keep_input_artifact = false
       files = [
         "./alpine315-docker.box",
       ]

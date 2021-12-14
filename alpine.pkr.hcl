@@ -85,24 +85,10 @@ build {
     expect_disconnect   = true
   }
 
-  post-processor "shell-local" {
-    inline = [
-      "ls -halu",
-      "ls -halu build",
-    ]
-  }
-
   post-processor "artifice" {
     files = [
       "build/xeptore-alpine315-docker-disk001.vmdk",
       "build/xeptore-alpine315-docker.ovf",
-    ]
-  }
-
-  post-processor "shell-local" {
-    inline = [
-      "ls -halu",
-      "ls -halu build",
     ]
   }
 
@@ -116,13 +102,6 @@ build {
   post-processor "artifice" {
     files = [
       "./build/alpine315-docker.box",
-    ]
-  }
-
-  post-processor "shell-local" {
-    inline = [
-      "ls -halu",
-      "ls -halu build",
     ]
   }
 

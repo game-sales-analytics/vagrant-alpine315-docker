@@ -76,9 +76,9 @@ jobs:
         run: |
           curl --header 'Authorization: Bearer ${{ secrets.VAGRANT_CLOUD_TOKEN }}' --request DELETE https://app.vagrantup.com/api/v1/box/xeptore/alpine315-docker/version/${{ steps.meta.outputs.version }}
       - name: Validate Packer Template
-        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' ubuntu.pkr.hcl
+        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
       - name: Build Vagrant Box
-        run: packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' ubuntu.pkr.hcl
+        run: packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
       - name: Prepare Built Box Checksum
         run: |
           mv packer_xeptore-alpine315-docker.checksum build.checksum

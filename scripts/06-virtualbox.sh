@@ -13,7 +13,7 @@ printf "Installing the Virtual Box Tools.\n"
 
 # Install the VirtualBox kernel modules for guest services.
 # retry apk add virtualbox-guest-modules-virt@edge-community virtualbox-guest-additions@edge-community
-apk add virtualbox-guest-additions
+retry apk add virtualbox-guest-additions
 
 # Autoload the virtualbox kernel modules.
 rc-update add virtualbox-guest-additions default && rc-service virtualbox-guest-additions start
@@ -23,7 +23,7 @@ rm -rf /root/VBoxVersion.txt
 rm -rf /root/VBoxGuestAdditions.iso
 
 # Boosts the available entropy which allows magma to start faster.
-apk add haveged
+retry apk add haveged
 
 # Autostart the haveged daemon.
 rc-update add haveged default && rc-service haveged start

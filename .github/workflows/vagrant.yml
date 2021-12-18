@@ -86,6 +86,10 @@ jobs:
           (echo "===== Packer build: 4 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
           (echo "===== Packer build: 5 ====" && packer build -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
           (echo "==== Packer build Failed ====" && exit 1)
+      - name: Test
+        run: |
+          ls -halu .
+          ls -halu build
       - name: Generate Release Note
         run: |
           echo '# Release `${{ steps.meta.outputs.tag_name }}`' > release.md
@@ -109,10 +113,6 @@ jobs:
           echo '```' >> release.md
 
           cat release.md
-      - name: Test
-        run: |
-          ls -halu .
-          ls -halu build
       - name: Release
         uses: softprops/action-gh-release@v1
         with:

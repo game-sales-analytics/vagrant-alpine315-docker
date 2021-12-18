@@ -44,12 +44,6 @@ build {
   }
 
   post-processors {
-    post-processor "artifice" {
-      files = [
-        "./build/package.box",
-      ]
-    }
-
     post-processor "vagrant-cloud" {
       access_token        = "${var.cloud_token}"
       box_tag             = "xeptore/alpine315-docker"

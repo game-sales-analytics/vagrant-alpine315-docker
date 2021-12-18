@@ -16,10 +16,10 @@ source "vagrant" "xeptore-alpine315-docker" {
   communicator = "ssh"
   source_path  = "generic/alpine315"
   provider     = "virtualbox"
-  box_version  = "3.6.0"
+  box_version  = "3.6.2"
   output_dir   = "build"
   add_force    = false
-  insert_key   = true
+  insert_key   = false
 }
 
 build {

@@ -10,3 +10,5 @@ apk upgrade
 
 apk add docker
 rc-update add docker default
+
+rm -rf /var/cache/apk/*

@@ -43,17 +43,15 @@ build {
     ]
   }
 
-  post-processors {
-    post-processor "vagrant-cloud" {
-      access_token        = "${var.cloud_token}"
-      box_tag             = "xeptore/alpine315-docker"
-      version             = "${var.version}"
-      version_description = "${var.version_description}"
-    }
+  post-processor "vagrant-cloud" {
+    access_token        = "${var.cloud_token}"
+    box_tag             = "xeptore/alpine315-docker"
+    version             = "${var.version}"
+    version_description = "${var.version_description}"
+  }
 
-    post-processor "checksum" {
-      checksum_types = ["sha512"]
-      output         = "build.checksum"
-    }
+  post-processor "checksum" {
+    checksum_types = ["sha512"]
+    output         = "build.checksum"
   }
 }

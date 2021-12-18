@@ -109,13 +109,16 @@ jobs:
           echo '```' >> release.md
 
           cat release.md
+      - name: Test
+        run: |
+          ls -halu .
+          ls -halu build
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
             license.txt
             build.checksum
-            alpine315-docker.box
           prerelease: false
           draft: false
           body_path: release.md

@@ -14,7 +14,7 @@ variable "version_description" {
 
 source "vagrant" "xeptore-alpine315-docker" {
   communicator = "ssh"
-  source_path  = "https://app.vagrantup.com/generic/boxes/alpine315/versions/3.6.2/providers/virtualbox.box"
+  source_path  = "generic/alpine315"
   provider     = "virtualbox"
   box_version  = "3.6.2"
   output_dir   = "build"

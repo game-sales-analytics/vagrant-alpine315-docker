@@ -35,6 +35,7 @@ source "virtualbox-iso" "xeptore-alpine315-docker" {
   vrdp_port_min        = 11000
   vrdp_port_max        = 12000
   boot_command = [
+    "<enter><wait10>",
     "root<enter><wait>",
     "ifconfig eth0 up<enter><wait>",
     "udhcpc -i eth0<enter><wait>",
@@ -76,6 +77,7 @@ build {
       "scripts/05-vagrant.sh",
       "scripts/06-sshd.sh",
       "scripts/06-docker.sh",
+      "scripts/06-virtualbox.sh",
       "scripts/07-cache.sh",
       "scripts/08-cleanup.sh",
     ]

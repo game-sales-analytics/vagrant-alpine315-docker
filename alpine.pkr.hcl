@@ -34,15 +34,12 @@ build {
   ]
 
   provisioner "shell" {
-    execute_command     = "/bin/sh -evx '{{.Path}}'"
+    execute_command     = "/bin/sh -evx sudo '{{.Path}}'"
     timeout             = "10m"
     start_retry_timeout = "5m"
     expect_disconnect   = false
-    inline = [
-      "printf 'https://mirror.math.princeton.edu/pub/alpinelinux/v3.15/main\n' >/etc/apk/repositories",
-      "printf 'https://mirror.math.princeton.edu/pub/alpinelinux/v3.15/community\n' >>/etc/apk/repositories",
-      "sudo apk add docker",
-      "rc-update add docker default",
+    scripts = [
+      "scripts/01-apk.sh",
     ]
   }
 

@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/alpine315"
+  config.vm.box_version = "3.6.2"
 
   config.vm.define "alpine"
   config.vm.provider "virtualbox" do |v|

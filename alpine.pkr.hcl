@@ -34,7 +34,7 @@ build {
   ]
 
   provisioner "shell" {
-    execute_command     = "/bin/sh -evx sudo '{{.Path}}'"
+    execute_command     = "echo 'vagrant' | sudo -S /bin/sh -c '{{.Path}}'"
     timeout             = "10m"
     start_retry_timeout = "5m"
     expect_disconnect   = false

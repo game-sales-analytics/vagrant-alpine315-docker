@@ -84,7 +84,7 @@ jobs:
           (echo "==== Packer build Failed ====" && exit 1)
       - name: Generate Release Note
         run: |
-          echo '# Release `${{ steps.meta.outputs.tag_name }}`' > release.md
+          echo '# Release `${{ steps.meta.outputs.version }}`' > release.md
           echo '' >> release.md
           echo '## Artifacts' >> release.md
           echo '' >> release.md

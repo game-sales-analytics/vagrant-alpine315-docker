@@ -39,7 +39,8 @@ build {
     start_retry_timeout = "5m"
     expect_disconnect   = false
     scripts = [
-      "scripts/01-apk.sh",
+      "scripts/apk.sh",
+      "scripts/init.sh",
     ]
   }
 

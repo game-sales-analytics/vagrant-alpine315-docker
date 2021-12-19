@@ -11,6 +11,6 @@ apk upgrade
 apk add docker
 rc-update add docker default
 
-apk del vim man-pages lsof file readline mdocml mlocate sysstat findutils sysfsutils dmidecode libmagic sqlite-libs ncurses-libs ncurses-terminfo ncurses-terminfo-base psmisc
+apk del vim man-pages lsof file mdocml mlocate sysstat findutils sysfsutils dmidecode libmagic sqlite-libs ncurses-terminfo psmisc
 
 rm -rf /var/cache/apk/*

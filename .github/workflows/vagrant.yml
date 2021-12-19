@@ -68,11 +68,7 @@ jobs:
         run: |
           brew tap hashicorp/tap
           brew install hashicorp/tap/packer
-      - name: Run vagrant up
-        run: vagrant up --provider=virtualbox
-      - name: SSH Into Box After Boot
-        run: vagrant ssh -c "echo 'hello world!'"
-      - name: Remove Already Existing Version
+      - name: Delete Any Existing Versions
         run: |
           curl --header 'Authorization: Bearer ${{ secrets.VAGRANT_CLOUD_TOKEN }}' --request DELETE https://app.vagrantup.com/api/v1/box/xeptore/alpine315-docker/version/${{ steps.meta.outputs.version }}
       - name: Validate Packer Template

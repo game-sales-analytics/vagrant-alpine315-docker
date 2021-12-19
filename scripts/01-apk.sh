@@ -17,6 +17,14 @@ rc-update add docker default
 # set vagrant user permissions to use docker commands without sudo
 addgroup vagrant docker
 
+# remove pre-installed apps and daemons
+rc-service virtualbox-guest-additions stop
+rc-update delete virtualbox-guest-additions default
+apk del virtualbox-guest-additions
+rc-service haveged stop
+rc-update delete haveged default
+apk del haveged
+
 # remove unnecessary tools already installed by generic base box
 apk del vim man-pages lsof file mdocml mlocate sysstat findutils sysfsutils dmidecode libmagic sqlite-libs ncurses-terminfo psmisc
 

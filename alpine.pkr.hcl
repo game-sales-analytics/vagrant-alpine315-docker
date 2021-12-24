@@ -39,8 +39,45 @@ build {
     start_retry_timeout = "5m"
     expect_disconnect   = false
     scripts = [
-      "scripts/apk.sh",
-      "scripts/init.sh",
+      "./scripts/00-apk.sh",
+    ]
+  }
+
+  provisioner "shell" {
+    timeout             = "10m"
+    start_retry_timeout = "5m"
+    expect_disconnect   = true
+    inline = [
+      "echo 'vagrant' | sudo -S reboot",
+    ]
+  }
+
+  provisioner "shell" {
+    execute_command     = "echo 'vagrant' | sudo -S /bin/sh -c '{{.Path}}'"
+    timeout             = "10m"
+    start_retry_timeout = "5m"
+    expect_disconnect   = false
+    scripts = [
+      "./scripts/01-rc.sh",
+    ]
+  }
+
+  provisioner "shell" {
+    timeout             = "10m"
+    start_retry_timeout = "5m"
+    expect_disconnect   = true
+    inline = [
+      "echo 'vagrant' | sudo -S reboot",
+    ]
+  }
+
+  provisioner "shell" {
+    execute_command     = "echo 'vagrant' | sudo -S /bin/sh -c '{{.Path}}'"
+    timeout             = "10m"
+    start_retry_timeout = "5m"
+    expect_disconnect   = false
+    scripts = [
+      "./scripts/02-cleanup.sh",
     ]
   }
 

@@ -55,6 +55,7 @@ build {
   provisioner "shell" {
     execute_command     = "echo 'vagrant' | sudo -S /bin/sh -c '{{.Path}}'"
     timeout             = "10m"
+    pause_before        = "20s"
     start_retry_timeout = "5m"
     expect_disconnect   = false
     scripts = [
@@ -74,6 +75,7 @@ build {
   provisioner "shell" {
     execute_command     = "echo 'vagrant' | sudo -S /bin/sh -c '{{.Path}}'"
     timeout             = "10m"
+    pause_before        = "20s"
     start_retry_timeout = "5m"
     expect_disconnect   = false
     scripts = [

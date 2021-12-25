@@ -3,6 +3,9 @@
 # Create the vagrant user account.
 printf "vagrant\nvagrant\n" | adduser -s /bin/sh vagrant
 
+# set vagrant user permissions to use docker commands without sudo
+addgroup vagrant docker
+
 cat <<-EOF >/etc/sudoers.d/vagrant
 Defaults:vagrant !fqdn
 Defaults:vagrant !requiretty

@@ -13,3 +13,6 @@ apk add docker
 
 # set vagrant user permissions to use docker commands without sudo
 addgroup vagrant docker
+
+# add docker to OpenRC default run-level
+rc-update add docker default

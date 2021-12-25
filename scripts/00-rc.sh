@@ -1,8 +1,5 @@
 #!/bin/sh -eux
 
-# add docker to OpenRC default run-level
-rc-update add docker default
-
 # remove/disable pre-installed apps and daemons
 rc-service virtualbox-guest-additions stop
 rc-update delete virtualbox-guest-additions default

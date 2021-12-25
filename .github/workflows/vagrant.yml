@@ -93,7 +93,7 @@ jobs:
           echo '- `alpine315-docker.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:' >> release.md
           echo '' >> release.md
           echo '  ```sh' >> release.md
-          echo '  vagrant box add --name xeptore/alpine315-docker /path/to/package.box' >> release.md
+          echo '  vagrant box add --name xeptore/alpine315-docker /path/to/alpine315-docker.box' >> release.md
           echo '  ```' >> release.md
           echo '' >> release.md
           echo 'The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.' >> release.md
@@ -109,7 +109,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/package.box
+            alpine315-docker.box
             license.txt
             build.checksum
           prerelease: false
@@ -117,7 +117,3 @@ jobs:
           body_path: release.md
           name: ${{ steps.meta.outputs.tag_name }}
           tag_name: ${{ steps.meta.outputs.tag_name }}
-      - name: Test
-        run: |
-          ls -halurik .
-          ls -halurik build

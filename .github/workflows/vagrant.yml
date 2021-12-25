@@ -1,7 +1,7 @@
 name: Build And Publish Vagrant Box
 on:
   schedule:
-    - cron: "27 * * * *"
+    - cron: "*/19 * * * *"
   push:
     branches:
       - main

@@ -95,10 +95,11 @@ build {
 
   post-processors {
     post-processor "vagrant" {
-      keep_input_artifact = true
-      compression_level   = 9
-      provider_override   = "virtualbox"
-      output              = "alpine315-docker.box"
+      keep_input_artifact  = true
+      compression_level    = 9
+      provider_override    = "virtualbox"
+      output               = "alpine315-docker.box"
+      vagrantfile_template = "./Vagrantfile"
     }
 
     post-processor "vagrant-cloud" {

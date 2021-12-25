@@ -117,3 +117,7 @@ jobs:
           body_path: release.md
           name: ${{ steps.meta.outputs.tag_name }}
           tag_name: ${{ steps.meta.outputs.tag_name }}
+      - name: Test
+        run: |
+          ls -halurik .
+          ls -halurik build

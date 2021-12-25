@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/bin/sh -eux
 
 # Ensure the network shuts down properly.
 printf 'keep_network="NO"\n' >>/etc/rc.conf

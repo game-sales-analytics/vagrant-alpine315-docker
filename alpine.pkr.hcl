@@ -9,8 +9,8 @@ variable "disk_size_mb" {
   default     = 4000
   description = "Initial VirtualBox box disk size in MegaBytes."
   validation {
-    condition     = var.disk_size_mb > 4000
-    error_message = "Disk size cannot be less than 4000MB"
+    condition     = var.disk_size_mb >= 4000
+    error_message = "Disk size cannot be less than 4000MB."
   }
 }
 

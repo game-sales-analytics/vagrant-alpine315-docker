@@ -9,7 +9,7 @@ apk update --no-cache
 apk upgrade
 
 # Install various basic system utilities.
-apk add docker bash wget curl sudo grep
+apk add docker wget sudo
 
 # add docker to OpenRC default run-level
 rc-update add docker default

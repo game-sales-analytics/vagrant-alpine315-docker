@@ -76,7 +76,7 @@ build {
   ]
 
   provisioner "shell" {
-    execute_command     = "/bin/sh '{{.Path}}'"
+    execute_command     = "/bin/sh -eux '{{.Path}}'"
     timeout             = "120m"
     start_retry_timeout = "10m"
     expect_disconnect   = true
@@ -88,7 +88,7 @@ build {
 
   provisioner "shell" {
     timeout             = "120m"
-    execute_command     = "{{.Vars}} /bin/sh '{{.Path}}'"
+    execute_command     = "{{.Vars}} /bin/sh -eux '{{.Path}}'"
     pause_before        = "60s"
     start_retry_timeout = "15m"
     expect_disconnect   = true
@@ -98,7 +98,6 @@ build {
       "./scripts/04-floppy.sh",
       "./scripts/05-vagrant.sh",
       "./scripts/06-sshd.sh",
-      "./scripts/07-cache.sh",
       "./scripts/08-cleanup.sh",
     ]
   }

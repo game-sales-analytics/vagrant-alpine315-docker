@@ -27,7 +27,7 @@ source "virtualbox-iso" "xeptore-alpine315-docker" {
   boot_wait            = "40s"
   http_directory       = "http"
   communicator         = "ssh"
-  disk_size            = 16000
+  disk_size            = 8000
   ssh_timeout          = "3600s"
   ssh_username         = "root"
   ssh_password         = "vagrant"

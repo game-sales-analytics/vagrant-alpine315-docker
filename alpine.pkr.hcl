@@ -6,11 +6,11 @@ variable "cloud_token" {
 
 variable "disk_size_mb" {
   type        = number
-  default     = 4000
+  default     = 8000
   description = "Initial VirtualBox box disk size in MegaBytes."
   validation {
-    condition     = var.disk_size_mb >= 4000
-    error_message = "Disk size cannot be less than 4000MB."
+    condition     = var.disk_size_mb >= 8000
+    error_message = "Disk size cannot be less than 8000MB."
   }
 }
 
@@ -34,7 +34,7 @@ source "virtualbox-iso" "xeptore-alpine315-docker" {
   headless             = false
   cpus                 = 4
   memory               = 8192
-  boot_wait            = "40s"
+  boot_wait            = "30s"
   http_directory       = "http"
   communicator         = "ssh"
   disk_size            = var.disk_size_mb
@@ -78,7 +78,7 @@ build {
   provisioner "shell" {
     execute_command     = "/bin/sh '{{.Path}}'"
     timeout             = "120m"
-    start_retry_timeout = "15m"
+    start_retry_timeout = "10m"
     expect_disconnect   = true
     scripts = [
       "./scripts/00-network.sh",
@@ -87,7 +87,11 @@ build {
   }
 
   provisioner "shell" {
-    timeout = "120m"
+    timeout             = "120m"
+    execute_command     = "{{.Vars}} /bin/sh '{{.Path}}'"
+    pause_before        = "60s"
+    start_retry_timeout = "15m"
+    expect_disconnect   = true
     scripts = [
       "./scripts/02-hostname.sh",
       "./scripts/03-lsb.sh",
@@ -97,10 +101,6 @@ build {
       "./scripts/07-cache.sh",
       "./scripts/08-cleanup.sh",
     ]
-    execute_command     = "{{.Vars}} /bin/sh '{{.Path}}'"
-    pause_before        = "120s"
-    start_retry_timeout = "15m"
-    expect_disconnect   = true
   }
 
   post-processors {

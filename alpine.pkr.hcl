@@ -4,6 +4,16 @@ variable "cloud_token" {
   default   = "${env("VAGRANT_CLOUD_TOKEN")}"
 }
 
+variable "disk_size_mb" {
+  type        = number
+  default     = 4000
+  description = "Initial VirtualBox box disk size in MegaBytes."
+  validation {
+    condition     = var.disk_size_mb > 4000
+    error_message = "Disk size cannot be less than 4000MB"
+  }
+}
+
 variable "version" {
   type = string
 }
@@ -27,7 +37,7 @@ source "virtualbox-iso" "xeptore-alpine315-docker" {
   boot_wait            = "40s"
   http_directory       = "http"
   communicator         = "ssh"
-  disk_size            = 8000
+  disk_size            = var.disk_size_mb
   ssh_timeout          = "3600s"
   ssh_username         = "root"
   ssh_password         = "vagrant"

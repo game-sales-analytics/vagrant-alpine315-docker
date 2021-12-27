@@ -31,11 +31,16 @@ jobs:
           echo ::set-output name=version::$VERSION
           echo ::set-output name=tag_name::$TAG_NAME
           BUILD_AT=$(gdate --date="$BUILD_DATE_TIME" --rfc-3339=seconds)
-          echo 'box_description<<EOF' >> $GITHUB_ENV
-          echo "Automated build at $BUILD_AT" >> $GITHUB_ENV
-          echo '' > $GITHUB_ENV
-          echo 'Project is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>' >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+
+          BOX_DESCRIPTION=$(cat << EOF
+          Automated build at $BUILD_AT
+
+          Project is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>
+          EOF
+          )
+          echo "box_description<<EOF" >> $GITHUB_ENV
+          echo "$BOX_DESCRIPTION" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v4
         with:

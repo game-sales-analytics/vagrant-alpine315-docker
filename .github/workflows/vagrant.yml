@@ -30,7 +30,7 @@ jobs:
             echo ::set-output name=version::$VERSION
             echo ::set-output name=create_tag::0
             echo ::set-output name=tag_name::${{ github.ref_name }}
-            echo ::set-output name=box_description::'Manual build.'
+            echo ::set-output name=box_description::'Manual build.\n\Project is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>'
           else
             BUILD_DATE_TIME=$(gdate --iso-8601=seconds)
             echo ::set-output name=build_date_time::$BUILD_DATE_TIME

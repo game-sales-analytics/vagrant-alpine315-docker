@@ -31,7 +31,11 @@ jobs:
           echo ::set-output name=version::$VERSION
           echo ::set-output name=tag_name::$TAG_NAME
           BUILD_AT=$(gdate --date="$BUILD_DATE_TIME" --rfc-3339=seconds)
-          echo ::set-output name=box_description::"Automated build at $BUILD_AT.\n\nProject is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>"
+          echo 'box_description<<EOF' >> $GITHUB_ENV
+          echo "Automated build at $BUILD_AT" >> $GITHUB_ENV
+          echo '' > $GITHUB_ENV
+          echo 'Project is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>' >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v4
         with:
@@ -61,15 +65,15 @@ jobs:
         run: |
           curl --header 'Authorization: Bearer ${{ secrets.VAGRANT_CLOUD_TOKEN }}' --request DELETE https://app.vagrantup.com/api/v1/box/xeptore/alpine315-docker/version/${{ steps.meta.outputs.version }}
       - name: Validate Packer Template
-        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
+        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
       - name: Build Vagrant Box
         run: |
           # Retry 5 times before the steps actually fails
-          (echo "===== Packer build: 1 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 2 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 3 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 4 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 5 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ steps.meta.outputs.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 1 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 2 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 3 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 4 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 5 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
           (echo "==== Packer build Failed ====" && exit 1)
       - name: Generate Release Note
         run: |

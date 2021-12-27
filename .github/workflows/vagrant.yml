@@ -24,24 +24,14 @@ jobs:
       - name: Meta
         id: meta
         run: |
-          if [[ '${{ github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' }}' == 'true' ]];
-          then
-            VERSION=$(echo ${{ github.ref_name }} | sed s/^v//)
-            echo ::set-output name=version::$VERSION
-            echo ::set-output name=create_tag::0
-            echo ::set-output name=tag_name::${{ github.ref_name }}
-            echo ::set-output name=box_description::'Manual build.\n\Project is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>'
-          else
-            BUILD_DATE_TIME=$(gdate --iso-8601=seconds)
-            echo ::set-output name=build_date_time::$BUILD_DATE_TIME
-            VERSION=$(gdate --date="$BUILD_DATE_TIME" '+%Y%m%d.%-H.%-M')
-            TAG_NAME=$(printf 'v%s' $VERSION)
-            echo ::set-output name=version::$VERSION
-            echo ::set-output name=create_tag::1
-            echo ::set-output name=tag_name::$TAG_NAME
-            BUILD_AT=$(gdate --date="$BUILD_DATE_TIME" --rfc-3339=seconds)
-            echo ::set-output name=box_description::"Automated build at $BUILD_AT."
-          fi
+          BUILD_DATE_TIME=$(gdate --iso-8601=seconds)
+          echo ::set-output name=build_date_time::$BUILD_DATE_TIME
+          VERSION=$(gdate --date="$BUILD_DATE_TIME" '+%Y%m%d.%-H.%-M')
+          TAG_NAME=$(printf 'v%s' $VERSION)
+          echo ::set-output name=version::$VERSION
+          echo ::set-output name=tag_name::$TAG_NAME
+          BUILD_AT=$(gdate --date="$BUILD_DATE_TIME" --rfc-3339=seconds)
+          echo ::set-output name=box_description::"Automated build at $BUILD_AT.\n\nProject is hosted on GitHub at: <https://github.com/game-sales-analytics/vagrant-alpine315-docker/>"
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@v4
         with:
@@ -50,7 +40,6 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
       - name: Create Tag
-        if: steps.meta.outputs.create_tag == 1
         run: |
           git tag -sa ${{ steps.meta.outputs.tag_name }} -m ${{ steps.meta.outputs.tag_name }}
           git push --follow-tags

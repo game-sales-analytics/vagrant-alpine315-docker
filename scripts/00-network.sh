@@ -11,5 +11,5 @@ printf 'rc_need="net-online"\n' >>/etc/conf.d/sshd
 # printf 'timeout=120\n' >>/etc/conf.d/net-online
 
 # Enable the net-online target.
-rc-update add net-online boot
+rc-update add net-online default
 rc-update -u

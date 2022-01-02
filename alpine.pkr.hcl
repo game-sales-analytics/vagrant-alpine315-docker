@@ -137,7 +137,7 @@ build {
 
     post-processor "checksum" {
       checksum_types = ["sha512"]
-      output         = "build-"${var.output_box_name}".checksum"
+      output         = "build-${var.output_box_name}.checksum"
     }
   }
 }

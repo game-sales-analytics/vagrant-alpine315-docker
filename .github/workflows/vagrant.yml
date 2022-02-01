@@ -69,32 +69,38 @@ jobs:
       - name: Delete Any Existing Versions
         run: |
           curl --header 'Authorization: Bearer ${{ secrets.VAGRANT_CLOUD_TOKEN }}' --request DELETE https://app.vagrantup.com/api/v1/box/xeptore/alpine315-docker/version/${{ steps.meta.outputs.version }}
-      - name: Validate Packer Docker Box Template
-        run: packer validate -var 'output_box_name=alpine315-docker.box' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
-      - name: Validate Packer Sentry Box Template
-        run: packer validate -var 'output_box_name=alpine315-sentry.box' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
-      - name: Build Docker Vagrant Box
+      - name: Validate Packer Template
+        run: packer validate -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl
+      - name: Build Vagrant Box
         run: |
           # Retry 5 times before the steps actually fails
-          (echo "===== Packer build: 1 ====" && packer build -force -var 'output_box_name=alpine315-docker.box' -var 'disk_size_mb=10000' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 2 ====" && packer build -force -var 'output_box_name=alpine315-docker.box' -var 'disk_size_mb=10000' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 3 ====" && packer build -force -var 'output_box_name=alpine315-docker.box' -var 'disk_size_mb=10000' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 4 ====" && packer build -force -var 'output_box_name=alpine315-docker.box' -var 'disk_size_mb=10000' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 5 ====" && packer build -force -var 'output_box_name=alpine315-docker.box' -var 'disk_size_mb=10000' -var 'box_tag=xeptore/alpine315-docker' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "==== Packer build Failed ====" && exit 1)
-      - name: Build Sentry Vagrant Box
-        run: |
-          # Retry 5 times before the steps actually fails
-          (echo "===== Packer build: 1 ====" && packer build -force -var 'output_box_name=alpine315-sentry.box' -var 'disk_size_mb=25000' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 2 ====" && packer build -force -var 'output_box_name=alpine315-sentry.box' -var 'disk_size_mb=25000' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 3 ====" && packer build -force -var 'output_box_name=alpine315-sentry.box' -var 'disk_size_mb=25000' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 4 ====" && packer build -force -var 'output_box_name=alpine315-sentry.box' -var 'disk_size_mb=25000' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
-          (echo "===== Packer build: 5 ====" && packer build -force -var 'output_box_name=alpine315-sentry.box' -var 'disk_size_mb=25000' -var 'box_tag=xeptore/alpine315-sentry' -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 1 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 2 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 3 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 4 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
+          (echo "===== Packer build: 5 ====" && packer build -force -var 'version=${{ steps.meta.outputs.version }}' -var 'version_description=${{ env.box_description }}' -var 'cloud_token=${{ secrets.VAGRANT_CLOUD_TOKEN }}' alpine.pkr.hcl) || \
           (echo "==== Packer build Failed ====" && exit 1)
       - name: Generate Release Note
         run: |
           echo '# Release `${{ steps.meta.outputs.version }}`' > release.md
           echo '' >> release.md
+          echo '## Artifacts' >> release.md
+          echo '' >> release.md
+          echo '- `build.checksum` contains sha512 checksums of the built Vagrant box. You can use it in your `Vagrantfile`.' >> release.md
+          echo '' >> release.md
+          echo '- `alpine315-docker.box` is the Vagrant VirtualBox box which can be directly downloaded and added to Vagrant boxes using:' >> release.md
+          echo '' >> release.md
+          echo '  ```sh' >> release.md
+          echo '  vagrant box add --name xeptore/alpine315-docker /path/to/alpine315-docker.box' >> release.md
+          echo '  ```' >> release.md
+          echo '' >> release.md
+          echo 'The box is also hosted at Vagrant Cloud and is accessible at: <https://app.vagrantup.com/xeptore/boxes/alpine315-docker>.' >> release.md
+          echo '' >> release.md
+          echo '## Box `SHA512`' >> release.md
+          echo '' >> release.md
+          echo '```sh' >> release.md
+          cut -f 1 build.checksum >> release.md
+          echo '```' >> release.md
 
           cat release.md
       - name: Release
@@ -102,10 +108,8 @@ jobs:
         with:
           files: |
             alpine315-docker.box
-            alpine315-sentry.box
             license.txt
-            build-alpine315-docker.box.checksum
-            build-alpine315-sentry.box.checksum
+            build.checksum
           prerelease: false
           draft: false
           body_path: release.md

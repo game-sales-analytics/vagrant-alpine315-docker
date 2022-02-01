@@ -22,17 +22,7 @@ variable "version_description" {
   type = string
 }
 
-variable "box_tag" {
-  type        = string
-  description = "Box tag used to push final Vagrant box to VagrantCloud"
-}
-
-variable "output_box_name" {
-  type        = string
-  description = "Output box file name"
-}
-
-source "virtualbox-iso" "xeptore-alpine315" {
+source "virtualbox-iso" "xeptore-alpine315-docker" {
   guest_os_type        = "Linux_64"
   iso_url              = "https://dl-cdn.alpinelinux.org/alpine/v3.15/releases/x86_64/alpine-virt-3.15.0-x86_64.iso"
   iso_checksum         = "sha512:df2c74ad9362411db259407a24d1f4e48df2b16fd53cc194cc6b9e666ed4741d37057fa34cb3f8e3e0710133f6a3d6ccff6b5e690fb511a51ef7cca2bc323b7e"
@@ -40,7 +30,7 @@ source "virtualbox-iso" "xeptore-alpine315" {
   nested_virt          = false
   guest_additions_mode = "disable"
   output_directory     = "./build"
-  vm_name              = "xeptore-alpine315"
+  vm_name              = "xeptore-alpine315-docker"
   headless             = false
   cpus                 = 4
   memory               = 8192
@@ -79,10 +69,10 @@ source "virtualbox-iso" "xeptore-alpine315" {
 }
 
 build {
-  name = "xeptore-alpine315"
+  name = "alpine315-docker"
 
   sources = [
-    "sources.virtualbox-iso.xeptore-alpine315"
+    "sources.virtualbox-iso.xeptore-alpine315-docker"
   ]
 
   provisioner "shell" {
@@ -117,13 +107,13 @@ build {
       keep_input_artifact  = true
       compression_level    = 9
       provider_override    = "virtualbox"
-      output               = "${var.output_box_name}"
+      output               = "alpine315-docker.box"
       vagrantfile_template = "./Vagrantfile"
     }
 
     post-processor "vagrant-cloud" {
       access_token        = "${var.cloud_token}"
-      box_tag             = "${var.box_tag}"
+      box_tag             = "xeptore/alpine315-docker"
       version             = "${var.version}"
       version_description = "${var.version_description}"
     }
@@ -131,13 +121,13 @@ build {
     post-processor "artifice" {
       keep_input_artifact = false
       files = [
-        "${var.output_box_name}",
+        "./alpine315-docker.box",
       ]
     }
 
     post-processor "checksum" {
       checksum_types = ["sha512"]
-      output         = "build-${var.output_box_name}.checksum"
+      output         = "build.checksum"
     }
   }
 }
